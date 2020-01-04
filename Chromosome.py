@@ -4,9 +4,11 @@ import random
 
 class Chromosome:
     genes = None
+    fitness = 0
 
     def __init__(self, genes):
         self.genes = genes
+        self.fitness = 0
 
     def is_feasible(self, graph):
         indices_to_be_flipped = []
@@ -24,3 +26,14 @@ class Chromosome:
     def repair(self, indices_to_be_flipped):  # Flips the bits which specified in indices_to_be_flipped
         for index in indices_to_be_flipped:
             self.genes[index] = 1
+
+    def calculate_fitness(self, graph):
+        self.fitness = 0
+        indices_of_ones = numpy.where(self.genes == 1)[0]
+        for index in indices_of_ones:
+            vertex = graph[index]
+            self.fitness += vertex.weight
+        return self.fitness
+
+    def get_selection_prob(self, mating_pool):
+        return self.fitness / mating_pool.total_fitness

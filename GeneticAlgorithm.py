@@ -1,15 +1,13 @@
-import numpy as np
-from Chromosome import Chromosome
 from Vertex import Vertex
+from MatingPool import MatingPool
 
 
 class GeneticAlgorithm:
     file = ""
     generations = 0
-    population_size = 0
     crossover_prob = 0.0
     mutation_prob = 0.0
-    population = []
+    mating_pool = None
     CROSSOVER_POINT = 500
     number_of_nodes = 0
     number_of_edges = 0
@@ -17,10 +15,9 @@ class GeneticAlgorithm:
 
     def __init__(self, file, generations, population_size, crossover_prob, mutation_prob):
         self.generations = generations
-        self.population_size = population_size
         self.crossover_prob = crossover_prob
         self.mutation_prob = mutation_prob
-        self.population = []
+        self.mating_pool = MatingPool(population_size)
         try:
             with open(file) as fp:
                 for i, line in enumerate(fp):
@@ -55,21 +52,11 @@ class GeneticAlgorithm:
             print("Input file not found!")
             exit(0)
 
-    def create_initial_population(self):
-        for i in range(0, self.population_size):
-            array = np.random.randint(2, size=1000)
-            self.population.append(Chromosome(array))
-
-    def crossover(self, parent1, parent2):  # TODO........
-        print()
-
-    def repair_all(self):
-        for chromosome in self.population:
-            indices_to_be_flipped = chromosome.is_feasible(self.graph)
-            if len(indices_to_be_flipped) > 0:
-                chromosome.repair(indices_to_be_flipped)
-
     def run(self):
-        self.create_initial_population()
+        self.mating_pool.create_initial_population()
         for i in range(0, self.generations):
-            self.repair_all()
+            self.mating_pool.repair(self.graph)
+            self.mating_pool.quick_sort(self.mating_pool.population, 0, len(self.mating_pool.population) - 1)
+            self.mating_pool.select_pool_by_probabilities()
+            self.mating_pool.crossover(self.crossover_prob)
+            self.mating_pool.mutate(self.mutation_prob)
