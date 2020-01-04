@@ -49,7 +49,7 @@ class GeneticAlgorithm:
                     else:  # Reading edges
                         vertices = line.strip().split(" ")
                         first_vertex = self.graph[int(vertices[0])]
-                        second_vertex = self.graph[int(vertices[1])]
+                        second_vertex = int(vertices[1])
                         first_vertex.add_adjacent(second_vertex)
         except FileNotFoundError:
             print("Input file not found!")
@@ -65,8 +65,9 @@ class GeneticAlgorithm:
 
     def repair_all(self):
         for chromosome in self.population:
-            if not chromosome.is_feasible():
-                chromosome.repair()
+            indices_to_be_flipped = chromosome.is_feasible(self.graph)
+            if len(indices_to_be_flipped) > 0:
+                chromosome.repair(indices_to_be_flipped)
 
     def run(self):
         self.create_initial_population()
