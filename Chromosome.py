@@ -10,7 +10,7 @@ class Chromosome:
         self.genes = genes
         self.fitness = 0
 
-    def is_feasible(self, graph):
+    def is_feasible(self, graph):  # TODO: Burası tam doğru değil. 0 olanların komuşlarına bakılacak......
         indices_to_be_flipped = []
         ''' numpy.where function finds indices of elements which have value of 0. So,
         it is enough to just looking their edges. '''
@@ -35,5 +35,12 @@ class Chromosome:
             self.fitness += vertex.weight
         return self.fitness
 
+    def all_adjacents_one(self, vertex, graph):
+        for adjacent in graph[vertex].adjacents:
+            if self.genes[adjacent.number] == 0:
+                return False
+        return True
+
+    # MWVCP is a minimization problem. So, it is needed to select low fitness with high prob.
     def get_selection_prob(self, mating_pool):
-        return self.fitness / mating_pool.total_fitness
+        return mating_pool.total_fitness / self.fitness # TODO

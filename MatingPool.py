@@ -18,11 +18,17 @@ class MatingPool:
             array = np.random.randint(2, size=1000)
             self.population.append(Chromosome(array))
 
+    def get_total_selection_prob(self):
+        total_selection_prob = 0
+        for chromosome in self.population:
+            total_selection_prob += chromosome.get_selection_prob(self)
+        return total_selection_prob
+
     # Each chromosome has a selection prob. and this func. creates new population by these probabilities
     def select_pool_by_probabilities(self):
         new_population = []
         for i in range(0, self.size):
-            value = random.random()  # A random value for selection
+            value = random.random() * self.get_total_selection_prob()  # A random value for selection
             prob_range = 0
             for chromosome in self.population:
                 prob_range += chromosome.get_selection_prob(self)
@@ -36,7 +42,8 @@ class MatingPool:
         while index <= len(self.population) - 2:
             value = random.random()  # A random value for crossover
             if value <= crossover_prob:  # Crossover will be made
-                print()  # TODO........
+                crossover_point = random.randint(1, len(self.population[index].genes) - 2)
+                # TODO: Gerisi yapılacak
             index += 2
 
     def partition(self, arr, low, high):
