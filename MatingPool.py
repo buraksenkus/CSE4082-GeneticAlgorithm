@@ -43,7 +43,14 @@ class MatingPool:
             value = random.random()  # A random value for crossover
             if value <= crossover_prob:  # Crossover will be made
                 crossover_point = random.randint(1, len(self.population[index].genes) - 2)
-                # TODO: Gerisi yapılacak
+                parent1_1 = self.population[index].genes[:crossover_point]
+                parent1_2 = self.population[index].genes[crossover_point:]
+                parent2_1 = self.population[index + 1].genes[:crossover_point]
+                parent2_2 = self.population[index + 1].genes[crossover_point:]
+                offspring_1 = np.concatenate([parent1_1, parent2_2])
+                offspring_2 = np.concatenate([parent2_1, parent1_2])
+                self.population[index].genes = offspring_1
+                self.population[index + 1].genes = offspring_2
             index += 2
 
     def partition(self, arr, low, high):
@@ -68,12 +75,21 @@ class MatingPool:
 
     def repair(self, graph):
         self.total_fitness = 0
-        for chromosome in self.population:
+        for i in range(0, len(self.population)):
+            print("Chromosome", i)
+            chromosome = self.population[i]
             indices_to_be_flipped = chromosome.is_feasible(graph)
             if len(indices_to_be_flipped) > 0:
                 chromosome.repair(indices_to_be_flipped)
             self.total_fitness += chromosome.calculate_fitness(graph)
 
-    def mutate(self, mutation_prob):  # TODO.............
+    def mutate(self, mutation_prob):
         for chromosome in self.population:
-            print()
+            for i in range(len(chromosome.genes)):
+                value = random.random()  # a random value for each bit of each chromosome that to compare mutation probability
+                if value < mutation_prob:  # if random value is smaller than mutation probability flip bit
+                    # flip bit
+                    if chromosome.genes[i] == 0:
+                        chromosome.genes[i] = 1
+                    else:
+                        chromosome.genes[i] = 0

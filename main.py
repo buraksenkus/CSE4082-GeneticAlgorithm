@@ -9,5 +9,5 @@ if len(sys.argv) == 6:
         print("Your inputs are invalid. Please correct them. (Use \".\" for floats)")
         exit(0)
 else:
-    algorithm = GeneticAlgorithm("003.txt", 5, 5, 0.8, 0.1)
+    algorithm = GeneticAlgorithm("003.txt", 400, 200, 0.9, 0.05)
     algorithm.run()
