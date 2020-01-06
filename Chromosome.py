@@ -18,20 +18,20 @@ class Chromosome:
             flip_list = []
             index = random.randint(0, len(flip_candidates) - 1)  # Pick a random vertex from the list
             vertex = flip_candidates[index]
-            if self.all_adjacents_one(vertex, graph):
+            if graph[vertex].all_adjacents_one(self, graph):
                 flip_candidates = numpy.setdiff1d(flip_candidates, numpy.array([vertex]))
             else:
                 flip_list.append(vertex)  # Add this vertex to the flip list
                 self.genes[vertex] = 1
                 # Since all of this vertex's adjacents will be removed from flip_candidates list, we have to check all
-                # and their adjacents as well
+                # and their adjacents as well25
                 for vertex1 in graph[vertex].adjacents:
                     if self.genes[vertex1] == 1:
                         continue
-                    for vertex2 in graph[vertex1].adjacents:
-                        if self.genes[vertex2] == 1:
+                    for vertex2 in graph[vertex].adjacents:
+                        if self.genes[vertex2] == 1 or not graph[vertex2].is_adjacent_with(vertex1):
                             continue
-                        if len(graph[vertex1].adjacents) > len(graph[vertex2].adjacents) == 0:
+                        if graph[vertex1].is_better_than(graph, vertex2):
                             flip_list.append(vertex1)
                             self.genes[vertex1] = 1
                             break
@@ -39,7 +39,7 @@ class Chromosome:
                             flip_list.append(vertex2)
                             self.genes[vertex2] = 1
                 # Remove vertices which will be flipped and adjacents of the base vertex
-                removing = numpy.concatenate([numpy.array(graph[vertex].adjacents), numpy.array(flip_list)])
+                removing = numpy.concatenate([numpy.array(list(graph[vertex].adjacents.keys() )), numpy.array(flip_list)])
                 flip_candidates = numpy.setdiff1d(flip_candidates, removing)
 
     def calculate_fitness(self, graph):
@@ -49,13 +49,6 @@ class Chromosome:
             vertex = graph[index]
             self.fitness += vertex.weight
         return self.fitness
-
-    # Checks whether all of the adjacents of a vertex is 1
-    def all_adjacents_one(self, vertex, graph):
-        for adjacent in graph[vertex].adjacents:
-            if self.genes[adjacent] == 0:
-                return False
-        return True
 
     # MWVCP is a minimization problem. So, it is needed to select low fitness with high prob.
     def get_selection_prob(self, mating_pool):

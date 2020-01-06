@@ -1,7 +1,6 @@
 from Vertex import Vertex
 from MatingPool import MatingPool
 import copy
-import numpy as np
 
 
 class GeneticAlgorithm:
