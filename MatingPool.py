@@ -69,10 +69,10 @@ class MatingPool:
     def repair(self, graph):
         self.total_fitness = 0
         for chromosome in self.population:
-            self.total_fitness += chromosome.calculate_fitness(graph)
             indices_to_be_flipped = chromosome.is_feasible(graph)
             if len(indices_to_be_flipped) > 0:
                 chromosome.repair(indices_to_be_flipped)
+            self.total_fitness += chromosome.calculate_fitness(graph)
 
     def mutate(self, mutation_prob):  # TODO.............
         for chromosome in self.population:
