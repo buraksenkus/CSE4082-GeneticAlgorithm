@@ -63,4 +63,4 @@ class Chromosome:
 
     # MWVCP is a minimization problem. So, it is needed to select low fitness with high prob.
     def get_selection_prob(self, mating_pool):
-        return mating_pool.total_fitness / self.fitness # TODO
+        return mating_pool.total_fitness / self.fitness
