@@ -66,7 +66,8 @@ class GeneticAlgorithm:
             self.mating_pool.quick_sort(self.mating_pool.population, 0, len(self.mating_pool.population) - 1)
             if self.best is None or self.best.fitness > self.mating_pool.population[0].fitness:
                 self.best = copy.copy(self.mating_pool.population[0])
-                print("Generation", i, "best:", self.best.fitness)
             self.mating_pool.select_pool_by_probabilities()
             self.mating_pool.crossover(self.crossover_prob)
             self.mating_pool.mutate(self.mutation_prob)
+            print("Generation", i+1, "best:", self.best.fitness)
+        print("Final best", self.best.fitness)
