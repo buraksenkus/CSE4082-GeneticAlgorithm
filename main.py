@@ -38,21 +38,5 @@ def run(file_name, generations, pop_size, crossover_prob, mutation_prob):
     plt.cla()
     plt.close(fig)
 
-'''
-file_list = ["003.txt", "015.txt", "030.txt"]
-gen_list = [100, 400]
-pop_list = [100, 200]
-cross_list = [0.5, 0.9]
-mut_list = [0.05, 0.001]
 
-for f in file_list:
-    for g in gen_list:
-        for p in pop_list:
-            for c in cross_list:
-                for m in mut_list:
-                    file_name = f
-                    generations = g
-                    pop_size = p
-                    crossover_prob = c
-                    mutation_prob = m
-                    run(file_name, generations, pop_size, crossover_prob, mutation_prob)'''
+run(file_name, generations, pop_size, crossover_prob, mutation_prob)

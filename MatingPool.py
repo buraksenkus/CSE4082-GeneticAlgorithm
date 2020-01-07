@@ -27,8 +27,9 @@ class MatingPool:
     # Each chromosome has a selection prob. and this func. creates new population by these probabilities
     def select_pool_by_probabilities(self):
         new_population = []
+        total_selection_prob = self.get_total_selection_prob()
         for i in range(0, self.size):
-            value = random.random() * self.get_total_selection_prob()  # A random value for selection
+            value = random.random() * total_selection_prob  # A random value for selection
             prob_range = 0
             for chromosome in self.population:
                 prob_range += chromosome.get_selection_prob(self)
@@ -76,8 +77,6 @@ class MatingPool:
     def repair(self, graph):
         self.total_fitness = 0
         for i in range(0, len(self.population)):
-            # if i % 50 == 0:
-            #     print("Chromosome", i)
             chromosome = self.population[i]
             chromosome.repair(graph)
             self.total_fitness += chromosome.calculate_fitness(graph)
