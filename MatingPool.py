@@ -76,8 +76,8 @@ class MatingPool:
     def repair(self, graph):
         self.total_fitness = 0
         for i in range(0, len(self.population)):
-            if i % 50 == 0:
-                print("Chromosome", i)
+            # if i % 50 == 0:
+            #     print("Chromosome", i)
             chromosome = self.population[i]
             chromosome.repair(graph)
             self.total_fitness += chromosome.calculate_fitness(graph)

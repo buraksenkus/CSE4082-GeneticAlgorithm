@@ -4,7 +4,6 @@ import copy
 
 
 class GeneticAlgorithm:
-    file = ""
     generations = 0
     crossover_prob = 0.0
     mutation_prob = 0.0
@@ -13,7 +12,7 @@ class GeneticAlgorithm:
     number_of_edges = 0
     graph = []
     best = None
-    sum = 0
+    fitness_data = []
 
     def __init__(self, file, generations, population_size, crossover_prob, mutation_prob):
         self.generations = generations
@@ -21,7 +20,7 @@ class GeneticAlgorithm:
         self.mutation_prob = mutation_prob
         self.mating_pool = MatingPool(population_size)
         self.best = None
-        self.sum = 0
+        self.fitness_data = []
         try:
             with open(file) as fp:
                 for i, line in enumerate(fp):
@@ -57,16 +56,24 @@ class GeneticAlgorithm:
             exit(0)
 
     def run(self):
-        for vertex in self.graph:
-            self.sum += vertex.weight
+        self.fitness_data = []
         self.mating_pool.create_initial_population()
-        for i in range(0, self.generations):
+        for i in range(0, self.generations + 1):
             self.mating_pool.repair(self.graph)
             self.mating_pool.quick_sort(self.mating_pool.population, 0, len(self.mating_pool.population) - 1)
             if self.best is None or self.best.fitness > self.mating_pool.population[0].fitness:
                 self.best = copy.copy(self.mating_pool.population[0])
+            self.fitness_data.append(self.mating_pool.total_fitness / self.mating_pool.size)
             self.mating_pool.select_pool_by_probabilities()
             self.mating_pool.crossover(self.crossover_prob)
             self.mating_pool.mutate(self.mutation_prob)
-            print("Generation", i+1, "best:", self.best.fitness)
-        print("Final best", self.best.fitness)
+            print("Generation", i, "best:", round(self.best.fitness, 4))
+        print("Final best", round(self.best.fitness, 4))
+
+    def check_feasibility_of_best(self):
+        for i in range(0, 1000):
+            if self.best.genes[i] == 0:
+                for adjacent in self.graph[i].adjacents:
+                    if self.best.genes[adjacent] == 0:
+                        return False
+        return True

@@ -18,18 +18,18 @@ class Chromosome:
             flip_list = []
             index = random.randint(0, len(flip_candidates) - 1)  # Pick a random vertex from the list
             vertex = flip_candidates[index]
-            if graph[vertex].all_adjacents_one(self, graph):
+            if graph[vertex].all_adjacents_one(self, graph):  # If all adjacents are 1, just remove vertex from candidates
                 flip_candidates = numpy.setdiff1d(flip_candidates, numpy.array([vertex]))
             else:
                 flip_list.append(vertex)  # Add this vertex to the flip list
                 self.genes[vertex] = 1
                 # Since all of this vertex's adjacents will be removed from flip_candidates list, we have to check all
-                # and their adjacents as well25
+                # and their adjacents as well
                 for vertex1 in graph[vertex].adjacents:
-                    if self.genes[vertex1] == 1:
+                    if self.genes[vertex1] == 1:  # Just if the vertex is not in the set
                         continue
-                    for vertex2 in graph[vertex].adjacents:
-                        if self.genes[vertex2] == 1 or not graph[vertex2].is_adjacent_with(vertex1):
+                    for vertex2 in graph[vertex1].adjacents:
+                        if self.genes[vertex2] == 1:  # Just if the vertex is not in the set
                             continue
                         if graph[vertex1].is_better_than(graph, vertex2):
                             flip_list.append(vertex1)
@@ -39,7 +39,7 @@ class Chromosome:
                             flip_list.append(vertex2)
                             self.genes[vertex2] = 1
                 # Remove vertices which will be flipped and adjacents of the base vertex
-                removing = numpy.concatenate([numpy.array(list(graph[vertex].adjacents.keys() )), numpy.array(flip_list)])
+                removing = numpy.concatenate([numpy.array(list(graph[vertex].adjacents.keys())), numpy.array(flip_list)])
                 flip_candidates = numpy.setdiff1d(flip_candidates, removing)
 
     def calculate_fitness(self, graph):
